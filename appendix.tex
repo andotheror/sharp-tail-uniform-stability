@@ -1,0 +1,349 @@
+\section{Detailed proofs}\label{app:proofs}
+
+This appendix proves the claims in the main text with one concrete choice of the scale constants.
+No optimization of numerical constants is intended.
+
+\subsection{Notation and elementary bounds}
+
+Let $\varepsilon_1,\ldots,\varepsilon_n$ be independent Rademacher signs and
+$B_n=\sum_i\varepsilon_i$. Define
+\[
+ k_\star=\left\lceil\frac{5n}{8}\right\rceil,
+ \qquad
+ s_\star=2k_\star-n,
+ \qquad
+ q_\star=\Pp(B_n\ge s_\star).
+\]
+Then
+\begin{equation}
+ \frac14\le\frac{s_\star}{n}\le\frac14+\frac2n.
+ \label{eq:rho-range}
+\end{equation}
+Hoeffding's inequality gives
+\begin{equation}
+ q_\star\le \exp\!\left(-\frac{s_\star^2}{2n}\right)
+ \le e^{-n/32}.
+ \label{eq:qstar-hoeffding}
+\end{equation}
+
+For $r\le n/1024$, put
+\[
+ q(r)=\Pp(B_n\ge s_\star-2r).
+\]
+The event on the right contains the upper tail at $k_\star$ and at most $r$ additional binomial
+levels. Moving down one level multiplies the point mass by
+\[
+ \frac{k}{n-k+1}
+ \le \frac{5n/8+1}{3n/8-r}
+ <2
+\]
+for all sufficiently large $n$. Since $q_\star$ is at least the mass at $k_\star$, we obtain
+\begin{equation}
+ \frac{q(r)}{q_\star}
+ \le(r+1)2^r\le4^r.
+ \label{eq:tail-ratio}
+\end{equation}
+The last inequality holds for every integer $r\ge1$.
+
+\subsection{The symmetrized maximum}
+
+\begin{proof}[Proof of Lemma~\ref{lem:H}]
+Write $M_a(x)=\max_ja_jx_j$. Then
+\[
+ H_a(x)=M_a(x)-M_a(-x).
+\]
+This immediately gives $H_a(-x)=-H_a(x)$. Since each $a_jx_j$ lies in
+$[-\|a\|_\infty,\|a\|_\infty]$, the range bound follows. Finally,
+\[
+ |M_a(x)-M_{a'}(x)|\le\max_j|(a_j-a'_j)x_j|
+ \le\|a-a'\|_\infty.
+\]
+Applying this inequality at $x$ and $-x$ and using the triangle inequality proves the final claim.
+\end{proof}
+
+\subsection{The learner is stable and bounded}\label{app:stable}
+
+We verify the claims around \eqref{eq:predictor}. Suppose $S$ and $S'$ differ at observation $i$.
+For every ramp coordinate,
+\[
+ |S_{kj}-S'_{kj}|=|X_{i,kj}-X'_{i,kj}|\le2.
+\]
+The scalar map in \eqref{eq:ramp} is $\gamma/2$-Lipschitz. Therefore
+\begin{equation}
+ \|a(S)-a(S')\|_\infty\le\gamma.
+ \label{eq:a-stability}
+\end{equation}
+Lemma~\ref{lem:H} implies that the $H/4$ term changes by at most $\gamma/2$ at every test point.
+
+Only the old and new memory cells can change. At either cell, $b_j$ takes values in
+$\{-c_{\rm mem},0,c_{\rm mem}\}$, so
+\begin{equation}
+ |b_j(S)-b_j(S')|\le2c_{\rm mem}\le\gamma/2.
+ \label{eq:b-stability}
+\end{equation}
+For a fixed test point, only its own cell is read. Adding \eqref{eq:a-stability} and
+\eqref{eq:b-stability} proves $\gamma$-uniform stability.
+
+If the scale set is nonempty, its largest element satisfies $p_K\le L/\gamma$. Thus
+\begin{equation}
+ \|a(S)\|_\infty\le\gamma r_K=\frac{\gamma p_K}{16}\le\frac L{16}.
+ \label{eq:a-range}
+\end{equation}
+The same bound is trivial if there are no ramps. Lemma~\ref{lem:H} gives
+$|H_a(X)|/4\le L/32$. Since $|b_J\Sigma|\le L/8$ and $|LU/4|=L/4$,
+\[
+ 3L/32\le h_S(Z)\le29L/32.
+\]
+This proves the range claim. With regression label zero, absolute loss is exactly $h_S(Z)$.
+
+For a fresh input, $X\overset{d}{=}-X$, and Lemma~\ref{lem:H} gives
+$\E[H_{a(S)}(X)\mid S]=0$. The fresh signs $\Sigma$ and $U$ are independent of $S$ and centered.
+This proves \eqref{eq:population-half} and \eqref{eq:gap-decomp}.
+
+\subsection{Probability of a clean extreme}\label{app:extreme}
+
+We prove the probability part of Lemma~\ref{lem:extreme}. For a scale $p_k=16r_k\le n/64$,
+equation \eqref{eq:qstar-hoeffding} gives
+\begin{equation}
+ q_\star\le e^{-2p_k}.
+ \label{eq:qstar-small}
+\end{equation}
+By the definition of $d_k$,
+\begin{align}
+ d_kq_\star
+ &\ge 8e^{-p_k/2}-q_\star
+ \ge7e^{-p_k/2},
+ &d_kq_\star&\le8e^{-p_k/2}.
+ \label{eq:lambda-bracket}
+\end{align}
+In particular, $d_k\ge2$.
+
+The clean event forbids every nonexceptional coordinate whose score is at least
+$t_k=s_\star-2r_k$. Equations \eqref{eq:tail-ratio} and \eqref{eq:lambda-bracket} show
+\begin{equation}
+ d_k q(r_k)
+ \le8e^{-p_k/2}4^{r_k}
+ \le8e^{-3p_k/8},
+ \label{eq:active-expectation}
+\end{equation}
+because $4^{r_k}=e^{(\log4)p_k/16}<e^{p_k/8}$. The same inequality holds at every larger scale.
+Since $p_{k+j}=4^jp_k$,
+\begin{equation}
+ \sum_{\ell\ge k}d_\ell q(r_\ell)
+ \le8\sum_{j\ge0}\exp\!\left(-\frac38 4^jp_k\right)
+ <0.021
+ \label{eq:forbidden-sum}
+\end{equation}
+for $p_k\ge16$.
+
+Choose which coordinate in group $k$ is the exceptional one. Independence of all Rademacher
+coordinates gives
+\begin{align}
+ \Pp(E_k)
+ &=d_kq_\star
+   (1-q(r_k))^{d_k-1}
+   \prod_{\ell>k}(1-q(r_\ell))^{d_\ell}\\
+ &\ge d_kq_\star
+ \left(1-\sum_{\ell\ge k}d_\ell q(r_\ell)\right)\\
+ &\ge7e^{-p_k/2}(1-0.021)
+ \ge6e^{-p_k/2}.
+ \label{eq:Ek-proof}
+\end{align}
+The second line is the union bound applied to all forbidden coordinates. This proves
+\eqref{eq:extreme-prob}.
+
+\subsection{Gap on the clean extreme event}\label{app:gap}
+
+On $E_k$, let $(k,j_\star)$ denote the exceptional coordinate and put $a=\gamma r_k$. Its score
+is at least $s_\star=t_k+2r_k$, so its ramp reaches the cap $a$. Every other coordinate in group
+$k$ or a larger group has amplitude zero. Every smaller scale has cap at most $a/4$.
+
+Write $x_i^\star=X_{i,kj_\star}$ and let $n_+$ and $n_-$ count its positive and negative signs.
+There is at least one zero-amplitude coordinate because $d_k\ge2$. If $x_i^\star=1$, the first
+maximum in $H$ is $a$ and the second is at most $a/4$, so
+\begin{equation}
+ H_{a(S)}(X_i)\ge3a/4.
+ \label{eq:H-plus}
+\end{equation}
+If $x_i^\star=-1$, the second maximum is $a$ and the first is at least zero, so
+\begin{equation}
+ H_{a(S)}(X_i)\ge-a.
+ \label{eq:H-minus}
+\end{equation}
+Let $\rho=(n_+-n_-)/n$. Equations \eqref{eq:H-plus} and \eqref{eq:H-minus} imply
+\begin{align}
+ \frac1n\sum_iH_{a(S)}(X_i)
+ &\ge \frac{3a}{4}\frac{1+\rho}{2}-a\frac{1-\rho}{2}
+ =a\left(\frac78\rho-\frac18\right).
+ \label{eq:H-average-rho}
+\end{align}
+On $E_k$, $\rho\ge s_\star/n\ge1/4$. The right side of \eqref{eq:H-average-rho} is increasing in
+$\rho$, so it is at least $3a/32$. Substituting $a=\gamma r_k=\gamma p_k/16$ proves
+\eqref{eq:extreme-gap}.
+
+\subsection{Rademacher anti-concentration}\label{app:anti}
+
+We give an elementary block proof of Lemma~\ref{lem:rad}. If $V_m$ is a sum of $m$ independent
+Rademacher signs, then
+\[
+ \E V_m^2=m,
+ \qquad
+ \E V_m^4=3m^2-2m\le3m^2.
+\]
+Paley--Zygmund applied to $V_m^2$ therefore gives
+\begin{equation}
+ \Pp\!\left(|V_m|\ge\sqrt{m/2}\right)\ge\frac1{12}.
+ \label{eq:block-paley}
+\end{equation}
+By symmetry, either one-sided event has probability at least $1/24$.
+
+Partition the first $qm$ signs of $T_n$ into $q$ blocks of size $m=\lfloor n/q\rfloor$, leaving
+at most $q-1$ signs. If every block sum is at least $\sqrt{m/2}$ and the leftover sum is
+nonnegative, then, whenever $q\le n/2$,
+\begin{equation}
+ T_n\ge q\sqrt{m/2}\ge\frac12\sqrt{nq}.
+ \label{eq:block-size}
+\end{equation}
+The event has probability at least
+\begin{equation}
+ \frac12\,24^{-q}.
+ \label{eq:block-prob}
+\end{equation}
+We now track constants. First suppose $1\le p<16$. The largest atom of $T_n$ is at most
+$n^{-1/2}$ by the central binomial coefficient bound. Positive attainable values are spaced by
+two, so there are at most $\sqrt n/32+1$ of them below $\sqrt n/16$. Symmetry gives
+\begin{equation}
+ \Pp(T_n\ge\sqrt n/16)
+ \ge\frac12-\frac{1}{2\sqrt n}-\left(\frac1{32}+\frac1{\sqrt n}\right)
+ =\frac{15}{32}-\frac{3}{2\sqrt n}\ge0.45
+ \label{eq:small-rad}
+\end{equation}
+for all sufficiently large $n$. Since $p<16$, the threshold is at least
+$\sqrt{np}/64$.
+
+For $16\le p<32\log24$, use one block. Equations~\eqref{eq:block-paley} and symmetry give
+\[
+ \Pp(T_n\ge\sqrt{n/2})\ge1/24\ge(1/8)e^{-p/8},
+\]
+and $\sqrt{n/2}\ge\sqrt{np}/64$. Finally, suppose $32\log24\le p\le n$ and take
+\[
+ q=\left\lfloor\frac{p}{16\log24}\right\rfloor.
+\]
+Then $p/(32\log24)\le q\le p/(16\log24)$ and $q\le n/2$. Equations
+\eqref{eq:block-size} and \eqref{eq:block-prob} yield
+\[
+ T_n\ge\frac{1}{2\sqrt{32\log24}}\sqrt{np}
+ \ge\frac1{64}\sqrt{np}
+\]
+with probability at least
+\[
+ \frac12 24^{-q}\ge\frac12e^{-p/16}
+ \ge\frac18e^{-p/8}.
+\]
+The three ranges prove Lemma~\ref{lem:rad} with no asymptotic normal approximation.
+
+\subsection{Small scales, saturation, and simultaneity}\label{app:cases}
+
+We fill in the cases abbreviated in the main proof. First, the memory indices are distinct with
+probability at least $15/16$ by \eqref{eq:distinct}. On this event,
+\begin{equation}
+ \frac1n\sum_i b_{J_i}(S)\Sigma_i=c_{\rm mem}.
+ \label{eq:memory-gap}
+\end{equation}
+
+Suppose $1\le p<16$. If $\gamma\le L/2$, then $c_{\rm mem}=\gamma/4$ and
+\[
+ c_{\rm mem}\ge\frac1{64}\min\{L,\gamma p\}.
+\]
+If $\gamma>L/2$, then $c_{\rm mem}=L/8$ and the same inequality is immediate. The probability
+that any ramp is active is at most the sum in \eqref{eq:forbidden-sum}, hence below $0.021$.
+By the compact-interval part of Lemma~\ref{lem:rad}, the sampling event can be chosen to have
+probability at least $0.45$ while still giving a universal multiple of $L\sqrt{p/n}$.
+The three events are independent, and
+$0.979\cdot(15/16)\cdot0.45>e^{-1}$. Their intersection therefore exceeds $e^{-p}$.
+This proves \eqref{eq:main-tail} for $p<16$.
+
+Now suppose $p\ge16$ but $L/\gamma<16$. Then $\gamma>L/16$ and
+\begin{equation}
+ c_{\rm mem}=\min\{\gamma/4,L/8\}\ge L/64.
+ \label{eq:memory-saturated}
+\end{equation}
+Thus memory alone supplies a constant fraction of the saturated stability term. Intersecting
+\eqref{eq:memory-gap} with Lemma~\ref{lem:rad} proves the result.
+
+It remains to justify \eqref{eq:chosen-scale}. Let
+$P=\min\{n/64,L/\gamma\}$. If $P\ge16$, the largest geometric scale below $P$ is greater than
+$P/4$. For a query $p\le c_0n\le n/64$, the largest available scale not exceeding $p$, or the terminal
+scale if $p>P$, therefore obeys
+\[
+ p_k\ge\frac14\min\{p,L/\gamma\}.
+\]
+The construction of all groups uses only $(n,L,\gamma)$. It is completed before $p$ is chosen.
+Thus the proof supplies the probability statement for all $p$ using the same distribution and
+algorithm. This establishes the simultaneity claimed in Theorem~\ref{thm:main}.
+
+Finally, on the intersection used in the proof,
+\begin{align}
+ G_S
+ &\ge \frac14\frac{3\gamma p_k}{512}
+       +c_{\rm mem}
+       +\frac{cL}{4}\sqrt{p/n}\\
+ &\ge c'\left(\min\{L,\gamma p\}+L\sqrt{p/n}\right)\\
+ &\ge c'\min\!\left\{L,\gamma p+L\sqrt{p/n}\right\}.
+\end{align}
+This also makes clear that every term is one-sided and no cancellation is used.
+
+\subsection{Moment consequence}
+
+Let
+\[
+ u_p=c_1\min\!\left\{L,\gamma p+L\sqrt{p/n}\right\}.
+\]
+Theorem~\ref{thm:main} gives $\Pp(G_S\ge u_p)\ge e^{-p}$. Hence
+\[
+ \|G_S\|_p^p\ge u_p^p e^{-p},
+ \qquad
+ \|G_S\|_p\ge e^{-1}u_p.
+\]
+This proves Corollary~\ref{cor:moments}. The upper direction of \eqref{eq:minimax} is
+\eqref{eq:upper} combined with $|G_S|\le L$. The lower direction is the corollary.
+
+\section{Exact computational audits}\label{app:audit}
+
+The construction contains only binomial probabilities and maximum inequalities. We nevertheless
+performed three audits.
+
+\paragraph{Exact clean-event probabilities.}
+For each $n\in\{4096,8192,16384,32768,65536\}$ and every geometric scale below $n/64$, we
+evaluated $q_\star$, each lowered tail $q(r_k)$, the floor in $d_k$, and the exact product in
+\eqref{eq:Ek-proof} in log space. Table~\ref{tab:audit} shows representative results. The final
+column divides the rigorous clean-event lower bound by $e^{-p_k/2}$. The analytic proof uses the
+weaker constant $6$.
+
+\begin{table}[h]
+\centering
+\caption{Exact audit of the multiscale event.}
+\label{tab:audit}
+\begin{tabular}{rrrrr}
+\toprule
+$n$ & $p_k$ & $-\log q_\star$ & $\log(q(r_k)/q_\star)/p_k$ &
+$\Pp(E_k)e^{p_k/2}$ lower bound\\
+\midrule
+4096  & 16   & 132.81  & 0.0320 & 7.964\\
+4096  & 64   & 132.81  & 0.0319 & 8.000\\
+16384 & 256  & 521.60  & 0.0318 & 8.000\\
+65536 & 1024 & 2074.71 & 0.0318 & 8.000\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Exhaustive stability audit.}
+For $n=d=3$, we enumerated every Rademacher dataset, every one-point replacement, and every test
+input. We separately enumerated every memory dataset with three cells. With $\gamma=0.2$, the
+largest ramp loss change was $0.1$, the largest memory loss change was $0.1$, and their sum was
+exactly $0.2$. The maximum coordinate-amplitude change was exactly $\gamma$. This checks the
+sharp cases of \eqref{eq:a-stability} and \eqref{eq:b-stability}.
+
+The audit scripts use exact enumeration for stability and double-precision log binomial masses for
+the probability calculation. The displayed margins are several orders of magnitude larger than
+floating-point error.
