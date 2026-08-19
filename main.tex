@@ -35,112 +35,49 @@
 \maketitle
 
 \begin{abstract}
-Uniform stability controls how much one training example can change the loss at any test point.
-A new logarithmic-free upper bound shows that a $\gamma$-uniformly stable algorithm with loss in
-$[0,L]$ has generalization gap at most
-\[
-  O\!\left(\gamma\log(1/\delta)
-  +L\sqrt{\frac{\log(1/\delta)}{n}}\right)
-\]
-with probability $1-\delta$. Whether an actual bounded-loss learning algorithm can realize the
-linear dependence on $\log(1/\delta)$ has remained open. The known construction realizes it only
-for auxiliary weakly dependent random variables whose pointwise range grows with $n$. The known
-learning lower bound holds only at constant probability.
+Uniform stability controls how much one training example can change the loss at any test point. A new logarithmic-free upper bound shows that a $\gamma$-uniformly stable algorithm with loss in $[0,L]$ has generalization gap at most \[ O\!\left(\gamma\log(1/\delta) +L\sqrt{\frac{\log(1/\delta)}{n}}\right) \] with probability $1-\delta$. Whether an actual bounded-loss learning algorithm can realize the linear dependence on $\log(1/\delta)$ has remained open. The known construction realizes it only for auxiliary weakly dependent random variables whose pointwise range grows with $n$. The known learning lower bound holds only at constant probability.
 
-We close this gap. For every $n$, stability level $\gamma$, and loss bound $L$, we construct one
-deterministic $\gamma$-uniformly stable learning problem whose tail satisfies, simultaneously
-for $1\le p\le c n$,
-\[
- \Pp\!\left(
- R(A_S)-R_S(A_S)
- \ge c'\min\!\left\{L,\gamma p+L\sqrt{p/n}\right\}
- \right)\ge e^{-p}.
-\]
-The construction is ordinary bounded absolute-loss regression with constant labels. Its key is a
-multiscale collection of rare Rademacher features. A coordinatewise ramp is stable in sup norm,
-while an odd symmetrized maximum converts a unique extreme feature into a gap of order
-$\gamma p$ without violating the loss bound. Geometrically spaced ramps put all confidence levels
-into the same problem. Together with the logarithmic-free upper bound, this determines the optimal
-high-probability and moment dependence of uniform stability up to universal constants.
+We close this gap. For every $n$, stability level $\gamma$, and loss bound $L$, we construct one deterministic $\gamma$-uniformly stable learning problem whose tail satisfies, simultaneously for $1\le p\le c n$, \[ \Pp\!\left( R(A_S)-R_S(A_S) \ge c'\min\!\left\{L,\gamma p+L\sqrt{p/n}\right\} \right)\ge e^{-p}. \] The construction is ordinary bounded absolute-loss regression with constant labels. Its key is a multiscale collection of rare Rademacher features. A coordinatewise ramp is stable in sup norm, while an odd symmetrized maximum converts a unique extreme feature into a gap of order $\gamma p$ without violating the loss bound. Geometrically spaced ramps put all confidence levels into the same problem. Together with the logarithmic-free upper bound, this determines the optimal high-probability and moment dependence of uniform stability up to universal constants.
 \end{abstract}
 
 \section{Introduction}
 
-Algorithmic stability explains generalization through the behavior of the learning rule rather than
-through uniform convergence over a hypothesis class. A learning algorithm $A$ is
-$\gamma$-uniformly stable when replacing one training example changes its loss at every test point
-by at most $\gamma$ \citep{bousquet2002}. This property underlies guarantees for regularized
-empirical risk minimization, gradient methods, and stochastic optimization
-\citep{shalev2010,hardt2016}. Its expectation guarantee is simple and sharp:
-$|\E[R(A_S)-R_S(A_S)]|\le\gamma$. Obtaining the correct high-probability guarantee took a longer
-sequence of results.
+Algorithmic stability explains generalization through the behavior of the learning rule rather than through uniform convergence over a hypothesis class. A learning algorithm $A$ is $\gamma$-uniformly stable when replacing one training example changes its loss at every test point by at most $\gamma$ \citep{bousquet2002}. This property underlies guarantees for regularized empirical risk minimization, gradient methods, and stochastic optimization \citep{shalev2010,hardt2016}. Its expectation guarantee is simple and sharp: $|\E[R(A_S)-R_S(A_S)]|\le\gamma$. Obtaining the correct high-probability guarantee took a longer sequence of results.
 
-The classical bounded-differences argument gives a deviation term of order
-$\gamma\sqrt{n\log(1/\delta)}$ \citep{bousquet2002}. \citet{feldman2018} replaced the factor
-$\gamma\sqrt n$ by $\sqrt{\gamma L}$, and \citet{feldman2019} obtained a nearly optimal bound
-with logarithmic overhead in $n$. \citet{bousquet2020} reduced the learning problem to a moment
-inequality for weakly interacting functions. Their result left one factor $\log n$ in the stability
-term. Very recently, \citet{nguyen2026} removed that factor and proved
+The classical bounded-differences argument gives a deviation term of order $\gamma\sqrt{n\log(1/\delta)}$ \citep{bousquet2002}. \citet{feldman2018} replaced the factor $\gamma\sqrt n$ by $\sqrt{\gamma L}$, and \citet{feldman2019} obtained a nearly optimal bound with logarithmic overhead in $n$. \citet{bousquet2020} reduced the learning problem to a moment inequality for weakly interacting functions. Their result left one factor $\log n$ in the stability term. Very recently, \citet{nguyen2026} removed that factor and proved
 \begin{equation}
  \|R(A_S)-R_S(A_S)\|_p
  \le 33p\gamma+L\sqrt{\frac{2p}{n}},
  \qquad p\ge2.
  \label{eq:upper}
 \end{equation}
-The trivial range bound then caps the right side by $L$. Equation~\eqref{eq:upper} gives the clean
-tail scale
+The trivial range bound then caps the right side by $L$. Equation~\eqref{eq:upper} gives the clean tail scale
 \begin{equation}
  \min\!\left\{L,\gamma\log(1/\delta)
  +L\sqrt{\frac{\log(1/\delta)}{n}}\right\}.
  \label{eq:frontier}
 \end{equation}
 
-The lower-bound side has not matched this progress. \citet{bousquet2020} constructed weakly
-interacting functions with $p$th moment $\Omega(pn\gamma+L\sqrt{pn})$. Their functions have
-pointwise magnitude of order $n\gamma$, so the construction does not come from a learning
-algorithm with a uniform loss bound $L$. They explicitly asked whether the same behavior is
-possible for the functions induced by a uniformly stable learner. \citet{liulu2021} later constructed
-a bounded-loss learner with gap $\Omega(\gamma+L/\sqrt n)$ at constant probability, and left the
-dependence on small failure probability open. The new upper-bound paper also separates its result
-from exactly this learning lower-bound question \citep{nguyen2026}.
-Our lower-bound theorem and proof are independent of that preprint. Equation~\eqref{eq:upper} is
-used only to identify the matching upper scale.
+The lower-bound side has not matched this progress. \citet{bousquet2020} constructed weakly interacting functions with $p$th moment $\Omega(pn\gamma+L\sqrt{pn})$. Their functions have pointwise magnitude of order $n\gamma$, so the construction does not come from a learning algorithm with a uniform loss bound $L$. They explicitly asked whether the same behavior is possible for the functions induced by a uniformly stable learner. \citet{liulu2021} later constructed a bounded-loss learner with gap $\Omega(\gamma+L/\sqrt n)$ at constant probability, and left the dependence on small failure probability open. The new upper-bound paper also separates its result from exactly this learning lower-bound question \citep{nguyen2026}. Our lower-bound theorem and proof are independent of that preprint. Equation~\eqref{eq:upper} is used only to identify the matching upper scale.
 
-We show that every term in \eqref{eq:frontier} is necessary. More strongly, one finite-dimensional
-problem realizes the full curve at all confidence levels $e^{-p}$ with $p\le cn$. This is not a
-different problem chosen for each $p$.
+We show that every term in \eqref{eq:frontier} is necessary. More strongly, one finite-dimensional problem realizes the full curve at all confidence levels $e^{-p}$ with $p\le cn$. This is not a different problem chosen for each $p$.
 
 \paragraph{Why the obvious quadratic construction fails.}
-Let $X_1,\ldots,X_n$ be Rademacher signs, $T=\sum_iX_i$, and let a learner predict with amplitude
-$\gamma T$. A linear loss has generalization gap $\gamma T^2/n$, whose $p$th scale is $\gamma p$.
-The prediction amplitude at that event is $\gamma\sqrt{np}$. Clipping it to the loss range $L$
-activates when $p\gtrsim L^2/(\gamma^2n)$. This is exactly where the term $\gamma p$ begins to
-dominate $L\sqrt{p/n}$. Thus clipping destroys the part of the tail that needs to be proved.
+Let $X_1,\ldots,X_n$ be Rademacher signs, $T=\sum_iX_i$, and let a learner predict with amplitude $\gamma T$. A linear loss has generalization gap $\gamma T^2/n$, whose $p$th scale is $\gamma p$. The prediction amplitude at that event is $\gamma\sqrt{np}$. Clipping it to the loss range $L$ activates when $p\gtrsim L^2/(\gamma^2n)$. This is exactly where the term $\gamma p$ begins to dominate $L\sqrt{p/n}$. Thus clipping destroys the part of the tail that needs to be proved.
 
 \paragraph{The new mechanism.}
-We replace one feature by many independent Rademacher features. At a chosen scale, exponentially
-many coordinates are placed just below a fixed large-deviation threshold. A ramp of width
-$\Theta(p)$ gives amplitude $\Theta(\gamma p)$ only when one coordinate crosses that threshold.
-The ramp is coordinatewise $\gamma$-stable regardless of the number of coordinates. The loss
-reads the coordinates through the odd function
+We replace one feature by many independent Rademacher features. At a chosen scale, exponentially many coordinates are placed just below a fixed large-deviation threshold. A ramp of width $\Theta(p)$ gives amplitude $\Theta(\gamma p)$ only when one coordinate crosses that threshold. The ramp is coordinatewise $\gamma$-stable regardless of the number of coordinates. The loss reads the coordinates through the odd function
 \begin{equation}
  H_a(x)=\max_j a_jx_j-\max_j(-a_jx_j).
  \label{eq:H-intro}
 \end{equation}
-It is centered under a symmetric population and is $2$-Lipschitz in $a$ under the sup norm. When
-there is one dominant coordinate, its empirical average is bounded away from zero, so it contributes
-$\Theta(\gamma p)$ to the gap. Coordinates with smaller ramps can be present without changing
-the sign of the effect. Coordinates with larger ramps are absent on the clean extreme event.
+It is centered under a symmetric population and is $2$-Lipschitz in $a$ under the sup norm. When there is one dominant coordinate, its empirical average is bounded away from zero, so it contributes $\Theta(\gamma p)$ to the gap. Coordinates with smaller ramps can be present without changing the sign of the effect. Coordinates with larger ramps are absent on the clean extreme event.
 
-We use geometrically spaced ramp widths. The event at scale $p_k$ has probability much larger than
-$e^{-p_k}$, which leaves enough probability to intersect it with an ordinary sampling-deviation
-event. A separate stable memorization term handles constant confidence and the range-saturated
-regime. All components are combined in a scalar predictor under absolute loss.
+We use geometrically spaced ramp widths. The event at scale $p_k$ has probability much larger than $e^{-p_k}$, which leaves enough probability to intersect it with an ordinary sampling-deviation event. A separate stable memorization term handles constant confidence and the range-saturated regime. All components are combined in a scalar predictor under absolute loss.
 
 \begin{figure}[t]
 \centering
-\small
-\setlength{\tabcolsep}{3pt}
+\small \setlength{\tabcolsep}{3pt}
 \begin{tabular}{c@{\ $\Longrightarrow$\ }c@{\ $\Longrightarrow$\ }c@{\ $\Longrightarrow$\ }c}
 \fbox{\parbox[c][0.66in][c]{0.18\linewidth}{\centering
 \textbf{Feature bank}\\[-2pt]
@@ -163,9 +100,7 @@ $\gamma p_k+L\sqrt{p/n}$\\
 probability $\ge e^{-p}$}}
 \end{tabular}
 \caption{The multiscale mechanism. Reciprocal-probability feature replication makes a rare
-large-deviation crossing visible. A coordinatewise stable ramp and the odd maximum turn that
-crossing into empirical bias. Independent memory and sampling terms fill the constant-confidence
-and square-root parts of the tail. Geometric choices of $p_k$ put every $p\le c n$ in one learner.}
+large-deviation crossing visible. A coordinatewise stable ramp and the odd maximum turn that crossing into empirical bias. Independent memory and sampling terms fill the constant-confidence and square-root parts of the tail. Geometric choices of $p_k$ put every $p\le c n$ in one learner.}
 \label{fig:mechanism}
 \end{figure}
 
@@ -175,53 +110,26 @@ and square-root parts of the tail. Geometric choices of $p_k$ put every $p\le c 
 \item We give the first bounded-loss uniformly stable learner with an
 $\Omega(\gamma\log(1/\delta))$ high-probability generalization gap.
 \item A single problem realizes
-$\Omega(\min\{L,\gamma p+L\sqrt{p/n}\})$ simultaneously for all $1\le p\le cn$.
-Consequently, the moment upper bound in \eqref{eq:upper} is sharp for actual learning algorithms.
+$\Omega(\min\{L,\gamma p+L\sqrt{p/n}\})$ simultaneously for all $1\le p\le cn$. Consequently, the moment upper bound in \eqref{eq:upper} is sharp for actual learning algorithms.
 \item The construction uses deterministic learning and standard absolute regression loss. We prove
 uniform stability over all replacement datasets, not only on the high-probability event.
 \end{itemize}
 
 \paragraph{Related extensions.}
-Several recent lines change the assumptions rather than the worst-case lower-bound question.
-\citet{klochkov2021} obtain faster excess-risk rates under a Bernstein condition.
-\citet{zhou2023pacbayes} derive PAC-Bayes bounds for randomized uniformly stable algorithms under
-a sub-exponential condition on their random stability parameter.
-\citet{yuanli2022} use subbagging to boost confidence for randomized algorithms under the weaker,
-distribution-dependent notion of $L_2$ stability. \citet{fanlei2024} introduce pointwise uniform
-stability and derive function-value and gradient generalization bounds, with applications to SGD.
-In a complementary 2026 direction, \citet{lei2026lp} replace bounded differences by finite-$L_p$
-replace-one envelopes
-and obtain Gaussian-plus-polynomial upper tails for unbounded losses.
-These results provide sharper conclusions from additional structure or modified algorithms. They do
-not give a high-probability lower bound for the ordinary deterministic uniform-stability condition
-\eqref{eq:stability}. Our result concerns exactly that worst-case condition and the bounded-loss
-minimax gap left open by \citet{bousquet2020}, \citet{liulu2021}, and \citet{nguyen2026}.
+Several recent lines change the assumptions rather than the worst-case lower-bound question. \citet{klochkov2021} obtain faster excess-risk rates under a Bernstein condition. \citet{zhou2023pacbayes} derive PAC-Bayes bounds for randomized uniformly stable algorithms under a sub-exponential condition on their random stability parameter. \citet{yuanli2022} use subbagging to boost confidence for randomized algorithms under the weaker, distribution-dependent notion of $L_2$ stability. \citet{fanlei2024} introduce pointwise uniform stability and derive function-value and gradient generalization bounds, with applications to SGD. In a complementary 2026 direction, \citet{lei2026lp} replace bounded differences by finite-$L_p$ replace-one envelopes and obtain Gaussian-plus-polynomial upper tails for unbounded losses. These results provide sharper conclusions from additional structure or modified algorithms. They do not give a high-probability lower bound for the ordinary deterministic uniform-stability condition \eqref{eq:stability}. Our result concerns exactly that worst-case condition and the bounded-loss minimax gap left open by \citet{bousquet2020}, \citet{liulu2021}, and \citet{nguyen2026}.
 
 \section{Setup and result}
 
-Let $S=(Z_1,\ldots,Z_n)\sim P^n$. An algorithm $A$ maps $S$ to a predictor $A_S$. For a loss
-$\ell$ with values in $[0,L]$, define
-\[
- R(A_S)=\E_{Z\sim P}\ell(A_S,Z),
- \qquad
- R_S(A_S)=\frac1n\sum_{i=1}^n\ell(A_S,Z_i),
- \qquad
- G_S=R(A_S)-R_S(A_S).
-\]
-The algorithm is $\gamma$-uniformly stable if, whenever $S$ and $S'$ differ in one coordinate,
+Let $S=(Z_1,\ldots,Z_n)\sim P^n$. An algorithm $A$ maps $S$ to a predictor $A_S$. For a loss $\ell$ with values in $[0,L]$, define \[ R(A_S)=\E_{Z\sim P}\ell(A_S,Z), \qquad R_S(A_S)=\frac1n\sum_{i=1}^n\ell(A_S,Z_i), \qquad G_S=R(A_S)-R_S(A_S). \] The algorithm is $\gamma$-uniformly stable if, whenever $S$ and $S'$ differ in one coordinate,
 \begin{equation}
  \sup_z|\ell(A_S,z)-\ell(A_{S'},z)|\le\gamma.
  \label{eq:stability}
 \end{equation}
 
-Our theorem is stated with unspecified universal constants. The appendix tracks concrete constants
-for the construction.
+Our theorem is stated with unspecified universal constants. The appendix tracks concrete constants for the construction.
 
 \begin{theorem}[Sharp lower tail]\label{thm:main}
-There are universal constants $c_0,c_1>0$ and $n_0\in\mathbb N$ with the following property.
-For every $n\ge n_0$, $L>0$, and $0\le\gamma\le L$, there are a finite input space, a distribution
-$P$, and one deterministic $\gamma$-uniformly stable absolute-loss regression algorithm with loss
-in $[0,L]$ such that, simultaneously for every real $p\in[1,c_0n]$,
+There are universal constants $c_0,c_1>0$ and $n_0\in\mathbb N$ with the following property. For every $n\ge n_0$, $L>0$, and $0\le\gamma\le L$, there are a finite input space, a distribution $P$, and one deterministic $\gamma$-uniformly stable absolute-loss regression algorithm with loss in $[0,L]$ such that, simultaneously for every real $p\in[1,c_0n]$,
 \begin{equation}
  \Pp_{S\sim P^n}\!\left(
  G_S\ge c_1\min\!\left\{L,\gamma p+L\sqrt{p/n}\right\}
@@ -231,9 +139,7 @@ in $[0,L]$ such that, simultaneously for every real $p\in[1,c_0n]$,
 The regression labels are identically zero.
 \end{theorem}
 
-The problem may depend on $(n,L,\gamma)$, as is standard for a minimax lower bound. Crucially, it
-does not depend on $p$ or $\delta$. The simultaneous statement immediately gives moment
-sharpness.
+The problem may depend on $(n,L,\gamma)$, as is standard for a minimax lower bound. Crucially, it does not depend on $p$ or $\delta$. The simultaneous statement immediately gives moment sharpness.
 
 \begin{corollary}[Moment sharpness]\label{cor:moments}
 For the problem in Theorem~\ref{thm:main} and every $p\in[2,c_0n]$,
@@ -244,27 +150,18 @@ For the problem in Theorem~\ref{thm:main} and every $p\in[2,c_0n]$,
 for a universal $c_2>0$.
 \end{corollary}
 
-Indeed, \eqref{eq:main-tail} implies
-$\|G_S\|_p\ge e^{-1}$ times its displayed threshold. Combining
-Corollary~\ref{cor:moments} with \eqref{eq:upper} and the range bound yields the minimax law
+Indeed, \eqref{eq:main-tail} implies $\|G_S\|_p\ge e^{-1}$ times its displayed threshold. Combining Corollary~\ref{cor:moments} with \eqref{eq:upper} and the range bound yields the minimax law
 \begin{equation}
  \sup_{(P,A,\ell)}\|G_S\|_p
  \asymp \min\!\left\{L,\gamma p+L\sqrt{p/n}\right\},
  \qquad 2\le p\le c_0n,
  \label{eq:minimax}
 \end{equation}
-where the supremum is over $\gamma$-stable algorithms with loss in $[0,L]$. The upper and lower
-constants in \eqref{eq:minimax} are universal.
+where the supremum is over $\gamma$-stable algorithms with loss in $[0,L]$. The upper and lower constants in \eqref{eq:minimax} are universal.
 
 \section{The multiscale learner}
 
-We now define the single problem used for every $p$. A training input is
-\[
- Z=(X,J,\Sigma,U).
-\]
-All components are independent. The vector $X$ consists of independent Rademacher coordinates,
-$J$ is uniform on $[D]$, and $\Sigma,U$ are Rademacher signs. The dimension of $X$ is divided into
-groups indexed by a geometric set of scales.
+We now define the single problem used for every $p$. A training input is \[ Z=(X,J,\Sigma,U). \] All components are independent. The vector $X$ consists of independent Rademacher coordinates, $J$ is uniform on $[D]$, and $\Sigma,U$ are Rademacher signs. The dimension of $X$ is divided into groups indexed by a geometric set of scales.
 
 Let
 \begin{equation}
@@ -274,8 +171,7 @@ Let
  p_k\le \min\{n/64,L/\gamma\},
  \label{eq:scales}
 \end{equation}
-where $L/0=+\infty$. Let $B_n$ be a sum of $n$ independent Rademacher signs. Choose the first
-attainable score $s_\star\ge n/4$ and set
+where $L/0=+\infty$. Let $B_n$ be a sum of $n$ independent Rademacher signs. Choose the first attainable score $s_\star\ge n/4$ and set
 \begin{equation}
  q_\star=\Pp(B_n\ge s_\star),
  \qquad
@@ -284,16 +180,13 @@ attainable score $s_\star\ge n/4$ and set
  t_k=s_\star-2r_k.
  \label{eq:dimensions}
 \end{equation}
-Group $k$ contains $d_k$ independent coordinates. For a sample, write
-$S_{kj}=\sum_{i=1}^nX_{i,kj}$ and define the ramp amplitude
+Group $k$ contains $d_k$ independent coordinates. For a sample, write $S_{kj}=\sum_{i=1}^nX_{i,kj}$ and define the ramp amplitude
 \begin{equation}
  a_{kj}(S)=\min\left\{\gamma r_k,
  \frac{\gamma}{2}(S_{kj}-t_k)_+\right\}.
  \label{eq:ramp}
 \end{equation}
-If the set of scales is empty, $X$ has one dummy coordinate with amplitude zero.
-The total feature dimension is finite and typically exponential in $n$ because
-$q_\star=e^{-\Theta(n)}$. Section~\ref{sec:discussion} explains why this multiplicity is used.
+If the set of scales is empty, $X$ has one dummy coordinate with amplitude zero. The total feature dimension is finite and typically exponential in $n$ because $q_\star=e^{-\Theta(n)}$. Section~\ref{sec:discussion} explains why this multiplicity is used.
 
 The memory component uses $D=8n^2$ cells. Let
 \begin{equation}
@@ -303,20 +196,15 @@ The memory component uses $D=8n^2$ cells. Let
  c_{\rm mem}=\min\{\gamma/4,L/8\},
  \label{eq:memory}
 \end{equation}
-with $\sgn(0)=0$. Collect all ramp amplitudes in a vector $a(S)$ and use the symmetrized maximum
-$H_a$ from \eqref{eq:H-intro}. The predictor is
+with $\sgn(0)=0$. Collect all ramp amplitudes in a vector $a(S)$ and use the symmetrized maximum $H_a$ from \eqref{eq:H-intro}. The predictor is
 \begin{equation}
  h_S(X,J,\Sigma,U)
  =\frac L2-\frac14H_{a(S)}(X)-b_J(S)\Sigma-\frac L4U.
  \label{eq:predictor}
 \end{equation}
-The regression label is zero and the loss is absolute error. We will show that $h_S\in[0,L]$, so
-the loss equals $h_S$ itself.
+The regression label is zero and the loss is absolute error. We will show that $h_S\in[0,L]$, so the loss equals $h_S$ itself.
 
-The four pieces in \eqref{eq:predictor} have distinct roles. The center $L/2$ enforces a valid loss
-range. The symmetrized maximum produces the $\gamma p$ tail. The cell memory produces a
-constant-order stability gap and handles scales below $16$ or above $L/\gamma$. The last sign
-produces the ordinary $L\sqrt{p/n}$ sampling tail.
+The four pieces in \eqref{eq:predictor} have distinct roles. The center $L/2$ enforces a valid loss range. The symmetrized maximum produces the $\gamma p$ tail. The cell memory produces a constant-order stability gap and handles scales below $16$ or above $L/\gamma$. The last sign produces the ordinary $L\sqrt{p/n}$ sampling tail.
 
 \section{Stability and centering}
 
@@ -332,23 +220,11 @@ For nonnegative vectors $a,a'$ and every sign vector $x$,
 \end{align}
 \end{lemma}
 
-The proof applies the $\ell_\infty$ Lipschitz property of a maximum twice. Replacing one training
-point changes every score $S_{kj}$ by at most two. Hence \eqref{eq:ramp} gives
-$\|a(S)-a(S')\|_\infty\le\gamma$. The $H/4$ term changes by at most $\gamma/2$.
-At a fixed memory cell, a replacement can change $b_j$ from $-c_{\rm mem}$ to
-$c_{\rm mem}$, so the memory term changes by at most $2c_{\rm mem}\le\gamma/2$.
-The $U$ term does not depend on the sample. This proves \eqref{eq:stability}.
+The proof applies the $\ell_\infty$ Lipschitz property of a maximum twice. Replacing one training point changes every score $S_{kj}$ by at most two. Hence \eqref{eq:ramp} gives $\|a(S)-a(S')\|_\infty\le\gamma$. The $H/4$ term changes by at most $\gamma/2$. At a fixed memory cell, a replacement can change $b_j$ from $-c_{\rm mem}$ to $c_{\rm mem}$, so the memory term changes by at most $2c_{\rm mem}\le\gamma/2$. The $U$ term does not depend on the sample. This proves \eqref{eq:stability}.
 
-The largest ramp cap is at most $L/16$. Lemma~\ref{lem:H} gives $|H_a|\le L/8$.
-Together with $c_{\rm mem}\le L/8$, the sample-dependent offset from $L/2$ in
-\eqref{eq:predictor} is at most
-\[
- L/32+L/8+L/4=13L/32.
-\]
-Thus $h_S\in[3L/32,29L/32]\subset[0,L]$.
+The largest ramp cap is at most $L/16$. Lemma~\ref{lem:H} gives $|H_a|\le L/8$. Together with $c_{\rm mem}\le L/8$, the sample-dependent offset from $L/2$ in \eqref{eq:predictor} is at most \[ L/32+L/8+L/4=13L/32. \] Thus $h_S\in[3L/32,29L/32]\subset[0,L]$.
 
-Conditional on the training sample, a fresh $X$ is symmetric. Lemma~\ref{lem:H} therefore gives
-$\E H_{a(S)}(X)=0$. A fresh $\Sigma$ and a fresh $U$ are centered as well, so
+Conditional on the training sample, a fresh $X$ is symmetric. Lemma~\ref{lem:H} therefore gives $\E H_{a(S)}(X)=0$. A fresh $\Sigma$ and a fresh $U$ are centered as well, so
 \begin{equation}
  R(A_S)=L/2
  \label{eq:population-half}
@@ -364,9 +240,7 @@ This exact identity is the bridge from rare features to generalization.
 
 \section{Rare extremes create the linear tail}
 
-For each scale $k$, let $E_k$ be the event that exactly one coordinate in group $k$ has score at
-least $s_\star$, and every other coordinate in group $k$ or a larger group $\ell>k$ has score
-strictly below its threshold $t_\ell$. Smaller groups are unrestricted.
+For each scale $k$, let $E_k$ be the event that exactly one coordinate in group $k$ has score at least $s_\star$, and every other coordinate in group $k$ or a larger group $\ell>k$ has score strictly below its threshold $t_\ell$. Smaller groups are unrestricted.
 
 \begin{lemma}[Clean extreme]\label{lem:extreme}
 For every scale in \eqref{eq:scales},
@@ -383,43 +257,25 @@ On $E_k$,
 \end{equation}
 \end{lemma}
 
-We give the main argument because it contains the new idea. Hoeffding's inequality yields
-$q_\star\le e^{-n/32}$. Since $p_k\le n/64$, the floor in \eqref{eq:dimensions} is negligible at
-the required constant scale and
+We give the main argument because it contains the new idea. Hoeffding's inequality yields $q_\star\le e^{-n/32}$. Since $p_k\le n/64$, the floor in \eqref{eq:dimensions} is negligible at the required constant scale and
 \begin{equation}
  d_kq_\star\ge7e^{-p_k/2}.
  \label{eq:one-extreme}
 \end{equation}
-Moving the threshold down by $r_k$ binomial steps multiplies its upper tail by at most
-$(r_k+1)2^{r_k}\le4^{r_k}<e^{p_k/8}$. Therefore, the expected number of coordinates in group
-$k$ at or above the forbidden threshold $t_k$, and similarly in every larger group, is at most
+Moving the threshold down by $r_k$ binomial steps multiplies its upper tail by at most $(r_k+1)2^{r_k}\le4^{r_k}<e^{p_k/8}$. Therefore, the expected number of coordinates in group $k$ at or above the forbidden threshold $t_k$, and similarly in every larger group, is at most
 \begin{equation}
  8e^{-p_k/2+p_k/8}=8e^{-3p_k/8}.
  \label{eq:active-count}
 \end{equation}
-The scales grow by four, so the sum of these expectations from group $k$ upward is below $0.021$.
-Independence across coordinates and a union bound with \eqref{eq:one-extreme} prove
-\eqref{eq:extreme-prob}.
+The scales grow by four, so the sum of these expectations from group $k$ upward is below $0.021$. Independence across coordinates and a union bound with \eqref{eq:one-extreme} prove \eqref{eq:extreme-prob}.
 
-On $E_k$, the exceptional coordinate reaches its cap $a=\gamma r_k$. Every coordinate in a
-smaller group has amplitude at most $a/4$, while every other coordinate in the same or a larger
-group has amplitude zero. Let $x_i^\star$ be the exceptional coordinate. If $x_i^\star=1$, then
-$H_a(X_i)\ge a-a/4$. If $x_i^\star=-1$, then $H_a(X_i)\ge-a$. Since
-$\sum_ix_i^\star\ge s_\star\ge n/4$, summing these inequalities gives
-\[
- \frac1n\sum_iH_a(X_i)
- \ge a\left(\frac14-\frac{1+1/4}{8}\right)=\frac{3a}{32}.
-\]
-This proves \eqref{eq:extreme-gap}. The smaller scales may fire, but the geometric cap makes them
-too weak to reverse the contribution of the exceptional feature.
+On $E_k$, the exceptional coordinate reaches its cap $a=\gamma r_k$. Every coordinate in a smaller group has amplitude at most $a/4$, while every other coordinate in the same or a larger group has amplitude zero. Let $x_i^\star$ be the exceptional coordinate. If $x_i^\star=1$, then $H_a(X_i)\ge a-a/4$. If $x_i^\star=-1$, then $H_a(X_i)\ge-a$. Since $\sum_ix_i^\star\ge s_\star\ge n/4$, summing these inequalities gives \[ \frac1n\sum_iH_a(X_i) \ge a\left(\frac14-\frac{1+1/4}{8}\right)=\frac{3a}{32}. \] This proves \eqref{eq:extreme-gap}. The smaller scales may fire, but the geometric cap makes them too weak to reverse the contribution of the exceptional feature.
 
-The role of the factor $e^{-p_k/2}$ is deliberate. It is more probability than the theorem needs.
-We spend the surplus by intersecting $E_k$ with the independent sampling event below.
+The role of the factor $e^{-p_k/2}$ is deliberate. It is more probability than the theorem needs. We spend the surplus by intersecting $E_k$ with the independent sampling event below.
 
 \section{Proof of the sharp tail}
 
-We use a standard one-sided anti-concentration fact. A self-contained block proof from the
-Paley--Zygmund inequality is included in Appendix~\ref{app:anti}.
+We use a standard one-sided anti-concentration fact. A self-contained block proof from the Paley--Zygmund inequality is included in Appendix~\ref{app:anti}.
 
 \begin{lemma}[Rademacher lower tail]\label{lem:rad}
 For all sufficiently large $n$, every Rademacher sum $T_n$ and $1\le p\le n$ satisfy
@@ -430,105 +286,49 @@ For all sufficiently large $n$, every Rademacher sum $T_n$ and $1\le p\le n$ sat
 For $1\le p<16$, the probability on the left is at least $0.45$.
 \end{lemma}
 
-The constants are elementary. Paley--Zygmund and symmetry give
-$\Pp(V_m\ge\sqrt{m/2})\ge1/24$ for a Rademacher block sum. For
-$p\ge32\log24$, split the signs into
-$q=\lfloor p/(16\log24)\rfloor$ blocks and require this event in every block, with a nonnegative
-leftover. The resulting threshold is at least $\sqrt{np}/64$ and the probability is at least
-$(1/2)24^{-q}\ge(1/8)e^{-p/8}$. One block handles $16\le p<32\log24$. For $p<16$,
-the maximum binomial atom bound $n^{-1/2}$ gives the stated $0.45$. Appendix~\ref{app:anti}
-records the arithmetic.
+The constants are elementary. Paley--Zygmund and symmetry give $\Pp(V_m\ge\sqrt{m/2})\ge1/24$ for a Rademacher block sum. For $p\ge32\log24$, split the signs into $q=\lfloor p/(16\log24)\rfloor$ blocks and require this event in every block, with a nonnegative leftover. The resulting threshold is at least $\sqrt{np}/64$ and the probability is at least $(1/2)24^{-q}\ge(1/8)e^{-p/8}$. One block handles $16\le p<32\log24$. For $p<16$, the maximum binomial atom bound $n^{-1/2}$ gives the stated $0.45$. Appendix~\ref{app:anti} records the arithmetic.
 
 Let $F$ be the event that the memory indices $J_1,\ldots,J_n$ are distinct. Since $D=8n^2$,
 \begin{equation}
  \Pp(F)\ge1-\frac{n(n-1)}{2D}\ge\frac{15}{16}.
  \label{eq:distinct}
 \end{equation}
-On $F$, each observed cell contains one sign. Hence
-$b_{J_i}(S)=c_{\rm mem}\Sigma_i$ and the middle term in \eqref{eq:gap-decomp} is exactly
-$c_{\rm mem}$.
+On $F$, each observed cell contains one sign. Hence $b_{J_i}(S)=c_{\rm mem}\Sigma_i$ and the middle term in \eqref{eq:gap-decomp} is exactly $c_{\rm mem}$.
 
-Fix $p\in[16,c_0n]$, where $c_0\le1/64$. If a scale is available, choose the largest
-available $p_k\le p$. In particular, this is the terminal scale when $p$ exceeds the largest
-constructed scale. The geometric spacing gives
+Fix $p\in[16,c_0n]$, where $c_0\le1/64$. If a scale is available, choose the largest available $p_k\le p$. In particular, this is the terminal scale when $p$ exceeds the largest constructed scale. The geometric spacing gives
 \begin{equation}
  p_k\ge\frac14\min\{p,L/\gamma\}.
  \label{eq:chosen-scale}
 \end{equation}
-On the independent intersection of $E_k$, $F$, and the event in Lemma~\ref{lem:rad} for
-$\sum_iU_i$, equations
-\eqref{eq:gap-decomp} and \eqref{eq:extreme-gap} give
+On the independent intersection of $E_k$, $F$, and the event in Lemma~\ref{lem:rad} for $\sum_iU_i$, equations \eqref{eq:gap-decomp} and \eqref{eq:extreme-gap} give
 \begin{equation}
  G_S\ge c\min\{L,\gamma p\}+cL\sqrt{p/n}.
  \label{eq:joint-gap}
 \end{equation}
-Its probability is at least
-\[
- 6e^{-p_k/2}\cdot\frac{15}{16}\cdot\frac18e^{-p/8}\ge e^{-p}.
-\]
-The inequality uses $p_k\le p$ and $p\ge16$.
+Its probability is at least \[ 6e^{-p_k/2}\cdot\frac{15}{16}\cdot\frac18e^{-p/8}\ge e^{-p}. \] The inequality uses $p_k\le p$ and $p\ge16$.
 
-If no scale is available, then $L/\gamma<16$. In that case
-$c_{\rm mem}\ge L/64$, which already gives a constant fraction of
-$\min\{L,\gamma p\}$. For $p<16$, the same memory term gives a constant fraction of
-$\min\{L,\gamma p\}$. We additionally require that no ramp is active. Equation
-\eqref{eq:active-count} shows that this event has probability above $0.97$. A constant-scale version
-of Lemma~\ref{lem:rad}, together with \eqref{eq:distinct}, leaves probability above $e^{-p}$ and
-gives the required $L\sqrt{p/n}$ term. This proves Theorem~\ref{thm:main}.
+If no scale is available, then $L/\gamma<16$. In that case $c_{\rm mem}\ge L/64$, which already gives a constant fraction of $\min\{L,\gamma p\}$. For $p<16$, the same memory term gives a constant fraction of $\min\{L,\gamma p\}$. We additionally require that no ramp is active. Equation \eqref{eq:active-count} shows that this event has probability above $0.97$. A constant-scale version of Lemma~\ref{lem:rad}, together with \eqref{eq:distinct}, leaves probability above $e^{-p}$ and gives the required $L\sqrt{p/n}$ term. This proves Theorem~\ref{thm:main}.
 
 \section{Discussion}\label{sec:discussion}
 
 \paragraph{The auxiliary lower bound is now realizable.}
-The construction of \citet{bousquet2020} produces the quadratic Rademacher chaos
-$\gamma(T_n^2-n)$, which has the right moments but arises from functions whose pointwise range is
-$\Theta(n\gamma)$. The ramps in our construction move the large deviation into the feature index.
-At any fixed test point, the loss reads a maximum and remains bounded. At the training sample, a
-rare coordinate carries a persistent empirical bias. This separates pointwise range from aggregate
-tail size.
+The construction of \citet{bousquet2020} produces the quadratic Rademacher chaos $\gamma(T_n^2-n)$, which has the right moments but arises from functions whose pointwise range is $\Theta(n\gamma)$. The ramps in our construction move the large deviation into the feature index. At any fixed test point, the loss reads a maximum and remains bounded. At the training sample, a rare coordinate carries a persistent empirical bias. This separates pointwise range from aggregate tail size.
 
 \paragraph{All confidence levels require multiple scales.}
-A single ramp can match one prescribed $p$, which would prove a pointwise minimax lower bound.
-The geometric family is stronger. Smaller ramps have at most one quarter of the target amplitude,
-while larger ramps are inactive with overwhelming probability. This scale separation is why the
-same learner matches the full tail rather than a confidence level fixed in advance.
+A single ramp can match one prescribed $p$, which would prove a pointwise minimax lower bound. The geometric family is stronger. Smaller ramps have at most one quarter of the target amplitude, while larger ramps are inactive with overwhelming probability. This scale separation is why the same learner matches the full tail rather than a confidence level fixed in advance.
 
 \paragraph{Implication for stability-based analyses.}
-A common analysis of an optimizer first proves a uniform stability constant and then invokes a
-distribution-free generalization theorem that sees only $(\gamma,L)$. Our lower bound shows that
-this black-box second step must retain the $\gamma\log(1/\delta)$ term. A sharper guarantee for a
-particular optimizer must use more information, such as curvature, data-dependent stability,
-algorithmic randomness, or representation constraints.
+A common analysis of an optimizer first proves a uniform stability constant and then invokes a distribution-free generalization theorem that sees only $(\gamma,L)$. Our lower bound shows that this black-box second step must retain the $\gamma\log(1/\delta)$ term. A sharper guarantee for a particular optimizer must use more information, such as curvature, data-dependent stability, algorithmic randomness, or representation constraints.
 
 \paragraph{The loss is standard, the learner is adversarial.}
-Our predictor is scalar and is evaluated by absolute loss against the constant label zero. The
-construction is nonetheless a worst-case learner with exponentially many Rademacher features.
-This multiplicity is deliberate. A coordinate has upper-tail probability $q_\star=e^{-\Theta(n)}$,
-and using on the order of $1/q_\star$ independent coordinates makes one crossing occur at a
-controlled probability. Within an independent-threshold bank of this form, the union bound shows
-that polynomial multiplicity cannot suffice. Probability $e^{-p}$ requires
-$d\ge e^{-p}/q_\star\ge e^{n/64}$ when $p\le n/64$. We do not claim that exponential dimension
-is necessary outside this mechanism. It is the price paid by this construction to encode all
-confidence levels in one problem. This is appropriate for
-determining what uniform stability alone can guarantee because that condition places no restriction
-on dimension. Additional
-structure, such as convex optimization, a fixed low-dimensional representation, or distributional
-stability, may yield smaller tails. The theorem shows that such improvements cannot follow from
-uniform stability and bounded loss by themselves.
+Our predictor is scalar and is evaluated by absolute loss against the constant label zero. The construction is nonetheless a worst-case learner with exponentially many Rademacher features. This multiplicity is deliberate. A coordinate has upper-tail probability $q_\star=e^{-\Theta(n)}$, and using on the order of $1/q_\star$ independent coordinates makes one crossing occur at a controlled probability. Within an independent-threshold bank of this form, the union bound shows that polynomial multiplicity cannot suffice. Probability $e^{-p}$ requires $d\ge e^{-p}/q_\star\ge e^{n/64}$ when $p\le n/64$. We do not claim that exponential dimension is necessary outside this mechanism. It is the price paid by this construction to encode all confidence levels in one problem. This is appropriate for determining what uniform stability alone can guarantee because that condition places no restriction on dimension. Additional structure, such as convex optimization, a fixed low-dimensional representation, or distributional stability, may yield smaller tails. The theorem shows that such improvements cannot follow from uniform stability and bounded loss by themselves.
 
 \paragraph{Confidence range.}
-The interval $p\le c n$ is the natural nondegenerate range for bounded i.i.d. sampling. It is also the
-range in which the weak-dependence lower bound of \citet{bousquet2020} has its two-level form.
-Beyond it, the loss-range cap dominates and constants depend on how the extreme endpoint is
-parameterized. Theorem~\ref{thm:main} covers every confidence level used in the usual exponential
-generalization regime.
+The interval $p\le c n$ is the natural nondegenerate range for bounded i.i.d. sampling. It is also the range in which the weak-dependence lower bound of \citet{bousquet2020} has its two-level form. Beyond it, the loss-range cap dominates and constants depend on how the extreme endpoint is parameterized. Theorem~\ref{thm:main} covers every confidence level used in the usual exponential generalization regime.
 
 \section*{Reproducibility statement}
 
-The proof is finite and nonasymptotic. The supplement gives every omitted constant calculation.
-It also provides three short audit programs: \texttt{extreme\_ramp\_check.py} evaluates the exact
-binomial probabilities, \texttt{multiscale\_check.py} checks every scale and case split, and
-\texttt{stability\_bruteforce.py} exhausts the replacement inequalities on small instances. These
-computations check the proof and are not used as assumptions.
+The proof is finite and nonasymptotic. The supplement gives every omitted constant calculation. It also provides three short audit programs: \texttt{extreme\_ramp\_check.py} evaluates the exact binomial probabilities, \texttt{multiscale\_check.py} checks every scale and case split, and \texttt{stability\_bruteforce.py} exhausts the replacement inequalities on small instances. These computations check the proof and are not used as assumptions.
 
 \bibliography{references}
 \bibliographystyle{iclr2027_conference}
